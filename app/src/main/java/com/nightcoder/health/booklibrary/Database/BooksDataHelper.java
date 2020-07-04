@@ -1,0 +1,88 @@
+package com.nightcoder.health.booklibrary.Database;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import com.nightcoder.health.booklibrary.Models.Book;
+
+import java.util.ArrayList;
+
+public class BooksDataHelper extends SQLiteOpenHelper {
+
+    private String TABLE_NAME = "books_table";
+
+    public BooksDataHelper(Context context) {
+        super(context, "database", null, 1);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" +
+                "bookName TEXT PRIMARY KEY UNIQUE," +
+                "price INT, stock INT, category TEXT, author TEXT, org TEXT)");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + "'" + TABLE_NAME + "'");
+        onCreate(sqLiteDatabase);
+    }
+
+    public Book getBook(String bookName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "
+                + TABLE_NAME + " WHERE bookName='" + bookName + "'", null);
+        if (cursor.moveToFirst()) {
+            Book book = new Book();
+            book.setBookName(cursor.getString(0));
+            book.setPrice(cursor.getInt(1));
+            book.setStock(cursor.getInt(2));
+            book.setCategory(cursor.getString(3));
+            book.setAuthor(cursor.getString(4));
+            book.setOrganization(cursor.getString(5));
+            cursor.close();
+            return book;
+        } else {
+            return null;
+        }
+    }
+
+    public ArrayList<Book> getAllBooks() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        if (cursor.moveToFirst()) {
+            ArrayList<Book> books = new ArrayList<>();
+            do {
+                Book book = new Book();
+                book.setBookName(cursor.getString(0));
+                book.setPrice(cursor.getInt(1));
+                book.setStock(cursor.getInt(2));
+                book.setCategory(cursor.getString(3));
+                book.setAuthor(cursor.getString(4));
+                book.setOrganization(cursor.getString(5));
+                books.add(book);
+            } while (cursor.moveToNext());
+            cursor.close();
+            return books;
+        } else {
+            return null;
+        }
+    }
+
+    public boolean addBook(String name, int price, int stock,
+                           String cat, String author, String org) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("bookName", name);
+        values.put("price", price);
+        values.put("stock", stock);
+        values.put("category", cat);
+        values.put("author", author);
+        values.put("org", org);
+        long result = db.insert(TABLE_NAME, null, values);
+        return result != -1;
+    }
+}
