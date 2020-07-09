@@ -27,6 +27,7 @@
         android:fontFamily="@font/roboto_regular"
         android:text="Log In Error"
         android:textAlignment="center"
+        android:textColor="@color/theme_color"
         android:textSize="16sp"
         tools:ignore="HardcodedText" />
 

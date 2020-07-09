@@ -1,10 +1,15 @@
 package com.nightcoder.health.booklibrary;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -19,6 +24,7 @@ import java.util.ArrayList;
 
 import static com.nightcoder.health.booklibrary.Literals.Database.ADMIN_USERNAME;
 import static com.nightcoder.health.booklibrary.Literals.Database.KEY_USER_CATEGORY;
+import static com.nightcoder.health.booklibrary.Literals.Database.KEY_USER_LOG_IN;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,10 +37,16 @@ public class MainActivity extends AppCompatActivity {
         ((TabLayout) findViewById(R.id.tab_lay)).setupWithViewPager(viewPager);
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new BookFragment(), "Books");
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        Log.d("User", Memory.getString(this, KEY_USER_CATEGORY, "none"));
         if (Memory.getString(this, KEY_USER_CATEGORY, "none").equals(ADMIN_USERNAME))
             adapter.addFragment(new OrderFragment(), "Orders");
-        else
+        else {
             adapter.addFragment(new OrderFragment(), "My Orders");
+            adapter.addFragment(new OrderFragment(), "CART");
+        }
         viewPager.setAdapter(adapter);
     }
 
@@ -71,5 +83,22 @@ public class MainActivity extends AppCompatActivity {
             return titles.get(position);
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.log_out) {
+            Memory.putString(this, KEY_USER_CATEGORY, "none");
+            Memory.putBool(this, KEY_USER_LOG_IN, false);
+            startActivity(new Intent(MainActivity.this, SignActivity.class));
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

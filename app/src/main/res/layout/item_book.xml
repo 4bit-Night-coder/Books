@@ -76,9 +76,22 @@
             android:layout_height="30dp"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="5dp"
+            android:visibility="gone"
             android:background="@drawable/sign_button_background"
             android:fontFamily="@font/roboto_bold"
             android:text="Buy"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/remove_button"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="5dp"
+            android:visibility="gone"
+            android:background="@drawable/remove_button_background"
+            android:fontFamily="@font/roboto_bold"
+            android:text="Remove"
             tools:ignore="HardcodedText" />
     </LinearLayout>
 
