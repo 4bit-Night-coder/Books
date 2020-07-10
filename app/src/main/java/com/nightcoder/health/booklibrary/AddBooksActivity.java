@@ -1,5 +1,7 @@
 package com.nightcoder.health.booklibrary;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -53,10 +55,16 @@ public class AddBooksActivity extends AppCompatActivity {
                                             author.getText().toString().trim(),
                                             org.getText().toString().trim());
                                     if (result) {
-                                        ViewSupports.materialDialog(
+                                        Dialog dialog = ViewSupports.materialDialog(
                                                 this,
                                                 "Publish Book",
                                                 "Your book has been successfully published");
+                                        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                            @Override
+                                            public void onCancel(DialogInterface dialogInterface) {
+                                                finish();
+                                            }
+                                        });
                                     } else {
                                         ViewSupports.materialDialog(
                                                 this,

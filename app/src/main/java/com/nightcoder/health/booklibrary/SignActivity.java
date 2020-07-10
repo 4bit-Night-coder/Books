@@ -16,6 +16,8 @@ import com.nightcoder.health.booklibrary.Listeners.FragmentChangeListener;
 import com.nightcoder.health.booklibrary.Supports.Memory;
 import com.nightcoder.health.booklibrary.Supports.ViewSupports;
 
+import static com.nightcoder.health.booklibrary.Literals.Database.ADMIN_PASSWORD;
+import static com.nightcoder.health.booklibrary.Literals.Database.ADMIN_USERNAME;
 import static com.nightcoder.health.booklibrary.Literals.Database.KEY_USER_CATEGORY;
 import static com.nightcoder.health.booklibrary.Literals.Database.KEY_USER_LOG_IN;
 
@@ -51,15 +53,26 @@ public class SignActivity extends AppCompatActivity implements FragmentChangeLis
 
     @Override
     public void onSignIn(String email, String pass) {
-        UserDataHelper helper = new UserDataHelper(mContext);
-        String result = helper.signUser(email, pass);
-        if (result.equals("Success")) {
-            startActivity(new Intent(mContext, MainActivity.class));
-            Memory.putString(mContext, KEY_USER_CATEGORY, email);
-            Memory.putBool(mContext, KEY_USER_LOG_IN, true);
-            finish();
+        if (email.equals(ADMIN_USERNAME)) {
+            if (pass.equals(ADMIN_PASSWORD)) {
+                startActivity(new Intent(mContext, MainActivity.class));
+                Memory.putString(mContext, KEY_USER_CATEGORY, email);
+                Memory.putBool(mContext, KEY_USER_LOG_IN, true);
+                finish();
+            } else {
+                ViewSupports.materialDialog(mContext, "Log In", "Check your password");
+            }
         } else {
-            ViewSupports.materialDialog(mContext, "Log In", result);
+            UserDataHelper helper = new UserDataHelper(mContext);
+            String result = helper.signUser(email, pass);
+            if (result.equals("Success")) {
+                startActivity(new Intent(mContext, MainActivity.class));
+                Memory.putString(mContext, KEY_USER_CATEGORY, email);
+                Memory.putBool(mContext, KEY_USER_LOG_IN, true);
+                finish();
+            } else {
+                ViewSupports.materialDialog(mContext, "Log In", result);
+            }
         }
     }
 

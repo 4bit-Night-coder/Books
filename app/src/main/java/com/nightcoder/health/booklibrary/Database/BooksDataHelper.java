@@ -38,7 +38,7 @@ public class BooksDataHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             Cursor cursor = db.rawQuery("SELECT * FROM "
-                    + TABLE_NAME + " WHERE bookName='" + bookName + "'", null);
+                    + TABLE_NAME + " WHERE _bookName='" + bookName + "'", null);
             if (cursor.moveToFirst()) {
                 Book book = new Book();
                 book.setBookName(cursor.getString(0));
@@ -101,5 +101,12 @@ public class BooksDataHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         long res = db.delete(TABLE_NAME, "_bookName='" + bookName + "'", null);
         return res != -1;
+    }
+
+    public boolean updateStock(String bookName, int stock) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("stock", stock);
+        return db.update(TABLE_NAME, cv, "_bookName='" + bookName + "'", null) > 0;
     }
 }

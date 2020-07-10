@@ -21,6 +21,7 @@ public class StartActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     startActivity(new Intent(StartActivity.this, MainActivity.class));
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, 2000);
@@ -29,6 +30,7 @@ public class StartActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     startActivity(new Intent(StartActivity.this, SignActivity.class));
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
             }, 2000);

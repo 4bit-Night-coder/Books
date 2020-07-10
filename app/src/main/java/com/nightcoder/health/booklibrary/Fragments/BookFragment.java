@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,8 +21,12 @@ import com.nightcoder.health.booklibrary.AddBooksActivity;
 import com.nightcoder.health.booklibrary.Database.BooksDataHelper;
 import com.nightcoder.health.booklibrary.Models.Book;
 import com.nightcoder.health.booklibrary.R;
+import com.nightcoder.health.booklibrary.Supports.Memory;
 
 import java.util.ArrayList;
+
+import static com.nightcoder.health.booklibrary.Literals.Database.ADMIN_USERNAME;
+import static com.nightcoder.health.booklibrary.Literals.Database.KEY_USER_CATEGORY;
 
 public class BookFragment extends Fragment {
 
@@ -28,6 +34,7 @@ public class BookFragment extends Fragment {
     private SwipeRefreshLayout refreshLayout;
     private RecyclerView recyclerView;
     private TextView noBooks;
+    private ImageButton addButton;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -44,27 +51,60 @@ public class BookFragment extends Fragment {
         noBooks = view.findViewById(R.id.text_no_books);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        view.findViewById(R.id.add_button).setOnClickListener(new View.OnClickListener() {
+        addButton = view.findViewById(R.id.add_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(mContext, AddBooksActivity.class));
             }
         });
-        setRecyclerView();
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 setRecyclerView();
             }
         });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    hideAddButton();
+                } else {
+                    showAddButton();
+                }
+            }
+        });
+        showAddButton();
         return view;
+    }
+
+    private void hideAddButton() {
+        if (Memory.getString(mContext, KEY_USER_CATEGORY, "none").equals(ADMIN_USERNAME)) {
+            addButton.setVisibility(View.GONE);
+            addButton.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_down));
+        }
+    }
+
+    private void showAddButton() {
+        if (Memory.getString(mContext, KEY_USER_CATEGORY, "none").equals(ADMIN_USERNAME)) {
+            addButton.setVisibility(View.VISIBLE);
+            addButton.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_up));
+        }
     }
 
     private void setRecyclerView() {
         BooksDataHelper helper = new BooksDataHelper(mContext);
         ArrayList<Book> books = helper.getAllBooks();
         if (!books.isEmpty()) {
-            BookAdapter adapter = new BookAdapter(mContext, books);
+            BookAdapter adapter;
+            if (Memory.getString(mContext, KEY_USER_CATEGORY, "none").equals(ADMIN_USERNAME)) {
+                adapter = new BookAdapter(mContext, books, true);
+            } else {
+                adapter = new BookAdapter(mContext, books, false);
+            }
             recyclerView.setAdapter(adapter);
             recyclerView.setVisibility(View.VISIBLE);
             noBooks.setVisibility(View.GONE);
@@ -73,5 +113,11 @@ public class BookFragment extends Fragment {
             noBooks.setVisibility(View.VISIBLE);
         }
         refreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setRecyclerView();
     }
 }

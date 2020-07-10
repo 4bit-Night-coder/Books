@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
             adapter.addFragment(new OrderFragment(), "Orders");
         else {
             adapter.addFragment(new OrderFragment(), "My Orders");
-            adapter.addFragment(new OrderFragment(), "CART");
         }
         viewPager.setAdapter(adapter);
     }

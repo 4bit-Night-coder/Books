@@ -4,8 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="10dp"
-    android:layout_marginTop="10dp"
+    android:id="@+id/container"
+    android:transitionName="itemTransition"
+    android:layout_marginBottom="10dp"
+    android:minHeight="100dp"
     android:layout_marginEnd="10dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#65252525" />
 
     <ImageView
         android:id="@+id/image"
@@ -55,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="16dp"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -63,7 +71,7 @@
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:fontFamily="@font/roboto_bold"
             android:text="Rs 100"
             android:textColor="#FFC400"
@@ -76,7 +84,7 @@
             android:layout_height="30dp"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="5dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:background="@drawable/sign_button_background"
             android:fontFamily="@font/roboto_bold"
             android:text="Buy"
@@ -93,6 +101,16 @@
             android:fontFamily="@font/roboto_bold"
             android:text="Remove"
             tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/out_stock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:fontFamily="@font/roboto_regular"
+            android:text="@string/out_of_stock"
+            android:textColor="@color/white"
+            android:visibility="gone" />
     </LinearLayout>
 
 </RelativeLayout>

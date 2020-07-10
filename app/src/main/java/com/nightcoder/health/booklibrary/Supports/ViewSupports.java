@@ -10,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.nightcoder.health.booklibrary.R;
 
 public class ViewSupports {
@@ -29,6 +30,19 @@ public class ViewSupports {
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         window.setGravity(Gravity.CENTER);
         window.setWindowAnimations(R.style.DialogAnimation);
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.show();
+        return dialog;
+    }
+
+    public static Dialog materialDialogBottomSheet(Context context, int id) {
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(id);
+        Window window = dialog.getWindow();
+        assert window != null;
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        window.setGravity(Gravity.BOTTOM);
+        window.setWindowAnimations(R.style.DialogAnimation_bottom);
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         dialog.show();
         return dialog;
